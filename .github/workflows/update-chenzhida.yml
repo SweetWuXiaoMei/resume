@@ -68,19 +68,19 @@ jobs:
           FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{LOCATION}}/$LOCATION/g")
           FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{PHONE}}/$PHONE/g")
           FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{UPDATE_TIME}}/$(date '+%Y年%m月%d日 %H:%M:%S')/g")
-          
-          # 4. 替换内容区域（使用更可靠的方法）
+
+          # 4. 替换内容区域（使用awk处理多行内容）
           if echo "$FINAL_HTML" | grep -q "{{RESUME_CONTENT}}"; then
-              FINAL_HTML=$(echo "$FINAL_HTML" | sed "s|{{RESUME_CONTENT}}|$MARKDOWN_HTML|")
+              FINAL_HTML=$(echo "$FINAL_HTML" | awk -v content="$MARKDOWN_HTML" '{gsub(/\{\{RESUME_CONTENT\}\/, content); print}')
           elif echo "$FINAL_HTML" | grep -q "<!-- {{RESUME_CONTENT}} -->"; then
-              FINAL_HTML=$(echo "$FINAL_HTML" | sed "s|<!-- {{RESUME_CONTENT}} -->|$MARKDOWN_HTML|")
+              FINAL_HTML=$(echo "$FINAL_HTML" | awk -v content="$MARKDOWN_HTML" '{gsub(/<!-- {{RESUME_CONTENT}} -->/, content); print}')
           else
               # 如果没有找到占位符，在markdown-body div中插入内容
-              FINAL_HTML=$(echo "$FINAL_HTML" | sed "s|<div class=\"markdown-body\" id=\"resume-content\">|<div class=\"markdown-body\" id=\"resume-content\">$MARKDOWN_HTML|")
+              FINAL_HTML=$(echo "$FINAL_HTML" | awk -v content="$MARKDOWN_HTML" '{gsub(/<div class="markdown-body" id="resume-content">/, "<div class=\"markdown-body\" id=\"resume-content\">" content); print}')
           fi
-          
+
           # 5. 写入最终的index.html
-          echo "$FINAL_HTML" > index.html
+          printf '%s\n' "$FINAL_HTML" > index.html
           
           # 6. 验证生成的文件
           if [ -s "index.html" ]; then
