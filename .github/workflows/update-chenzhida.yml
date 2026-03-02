@@ -88,12 +88,13 @@ jobs:
           UPDATE_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')
           FINAL_HTML="${FINAL_HTML//\{\{UPDATE_TIME\}\}/$UPDATE_TIME}"
 
-          # 4. 替换内容区域（使用bash字符串替换）
+          # 4. 替换内容区域（使用临时文件）
           echo "正在注入简历内容..."
-          FINAL_HTML="${FINAL_HTML//___RESUME_CONTENT___/$MARKDOWN_HTML}"
+          echo "$MARKDOWN_HTML" > /tmp/resume_content.html
+          FINAL_HTML=$(sed 's|___RESUME_CONTENT___||; r /tmp/resume_content.html' <<< "$FINAL_HTML")
 
           # 5. 写入最终的index.html
-          printf '%s\n' "$FINAL_HTML" > index.html
+          echo "$FINAL_HTML" > index.html
           
           # 6. 验证生成的文件
           if [ -s "index.html" ]; then
