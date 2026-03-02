@@ -88,9 +88,11 @@ jobs:
           UPDATE_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')
           FINAL_HTML="${FINAL_HTML//\{\{UPDATE_TIME\}\}/$UPDATE_TIME}"
 
-          # 4. 替换内容区域（使用bash字符串替换）
+          # 4. 替换内容区域（使用 perl 处理特殊字符）
           echo "正在注入简历内容..."
-          FINAL_HTML="${FINAL_HTML//___RESUME_CONTENT___/$MARKDOWN_HTML}"
+          echo "$FINAL_HTML" > /tmp/template.html
+          echo "$MARKDOWN_HTML" > /tmp/content.html
+          FINAL_HTML=$(perl -pe 's/\{\{\{RESUME_CONTENT\}\}\}//; open(my $fh, "<", "/tmp/content.html"); my $content = join("", <$fh>); s/\{\{\{RESUME_CONTENT\}\}\}/$content/ge; close($fh);' /tmp/template.html)
 
           # 5. 写入最终的index.html
           echo "$FINAL_HTML" > index.html
