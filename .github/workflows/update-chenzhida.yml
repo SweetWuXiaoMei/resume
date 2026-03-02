@@ -40,24 +40,24 @@ jobs:
           
           TEMPLATE_CONTENT=$(cat template.html)
           
-          # 2. 转换Markdown为HTML
+          # 2. 转换Markdown为HTML（不使用standalone，只获取HTML片段）
           if [ -f "resume.md" ]; then
               echo "正在转换 resume.md 为 HTML..."
-              MARKDOWN_HTML=$(pandoc resume.md -f markdown -t html --standalone 2>/dev/null || echo "<p>Markdown转换失败，请检查格式</p>")
+              MARKDOWN_HTML=$(pandoc resume.md -f markdown -t html 2>/dev/null || echo "<p>Markdown转换失败，请检查格式</p>")
           else
               echo "❌ resume.md 文件不存在"
               MARKDOWN_HTML="<h2>简历文件未找到</h2><p>请创建 resume.md 文件</p>"
           fi
-          
-          # 3. 从resume.md提取个人信息
+
+          # 3. 从resume.md提取个人信息（去除Markdown粗体标记）
           echo "正在解析resume.md提取个人信息..."
-          NAME=$(grep -A 1 "## 基本信息" resume.md | grep "姓名:" | sed 's/.*姓名:[[:space:]]*//' | xargs)
-          TITLE=$(grep -A 1 "## 求职意向" resume.md | grep "职位:" | sed 's/.*职位:[[:space:]]*//' | xargs)
-          EMAIL=$(grep "邮箱:" resume.md | sed 's/.*邮箱:[[:space:]]*//' | xargs)
-          PHONE=$(grep "电话:" resume.md | sed 's/.*电话:[[:space:]]*//' | xargs)
-          AGE=$(grep "年龄:" resume.md | sed 's/.*年龄:[[:space:]]*//' | xargs)
-          GENDER=$(grep "性别:" resume.md | sed 's/.*性别:[[:space:]]*//' | xargs)
-          EXPERIENCE=$(grep "工作年限:" resume.md | sed 's/.*工作年限:[[:space:]]*//' | xargs)
+          NAME=$(grep -A 1 "## 基本信息" resume.md | grep "姓名:" | sed 's/.*姓名:[[:space:]]*//' | sed 's/\*\*//g' | xargs)
+          TITLE=$(grep -A 1 "## 求职意向" resume.md | grep "职位:" | sed 's/.*职位:[[:space:]]*//' | sed 's/\*\*//g' | xargs)
+          EMAIL=$(grep "邮箱:" resume.md | sed 's/.*邮箱:[[:space:]]*//' | sed 's/\*\*//g' | xargs)
+          PHONE=$(grep "电话:" resume.md | sed 's/.*电话:[[:space:]]*//' | sed 's/\*\*//g' | xargs)
+          AGE=$(grep "年龄:" resume.md | sed 's/.*年龄:[[:space:]]*//' | sed 's/\*\*//g' | xargs)
+          GENDER=$(grep "性别:" resume.md | sed 's/.*性别:[[:space:]]*//' | sed 's/\*\*//g' | xargs)
+          EXPERIENCE=$(grep "工作年限:" resume.md | sed 's/.*工作年限:[[:space:]]*//' | sed 's/\*\*//g' | xargs)
 
           # 设置默认值（如果提取失败）
           NAME=${NAME:-"陈志达"}
@@ -88,16 +88,9 @@ jobs:
           UPDATE_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')
           FINAL_HTML="${FINAL_HTML//\{\{UPDATE_TIME\}\}/$UPDATE_TIME}"
 
-          # 4. 替换内容区域（使用临时文件和字符串替换）
-          if echo "$FINAL_HTML" | grep -q "{{RESUME_CONTENT}}"; then
-              # 使用shell的字符串替换
-              FINAL_HTML="${FINAL_HTML//\{\{RESUME_CONTENT\}\}/$MARKDOWN_HTML}"
-          elif echo "$FINAL_HTML" | grep -q "<!-- {{RESUME_CONTENT}} -->"; then
-              FINAL_HTML="${FINAL_HTML//<!-- {{RESUME_CONTENT}} -->/$MARKDOWN_HTML}"
-          else
-              # 如果没有找到占位符，在markdown-body div中插入内容
-              FINAL_HTML="${FINAL_HTML//<div class=\"markdown-body\" id=\"resume-content\">/<div class=\"markdown-body\" id=\"resume-content\">$MARKDOWN_HTML}"
-          fi
+          # 4. 替换内容区域（使用bash字符串替换）
+          echo "正在注入简历内容..."
+          FINAL_HTML="${FINAL_HTML//___RESUME_CONTENT___/$MARKDOWN_HTML}"
 
           # 5. 写入最终的index.html
           printf '%s\n' "$FINAL_HTML" > index.html
