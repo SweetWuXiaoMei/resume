@@ -88,10 +88,10 @@ jobs:
           UPDATE_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')
           FINAL_HTML="${FINAL_HTML//\{\{UPDATE_TIME\}\}/$UPDATE_TIME}"
 
-          # 4. 替换内容区域（使用临时文件）
+          # 4. 替换内容区域（使用awk处理）
           echo "正在注入简历内容..."
           echo "$MARKDOWN_HTML" > /tmp/resume_content.html
-          FINAL_HTML=$(sed 's|___RESUME_CONTENT___||; r /tmp/resume_content.html' <<< "$FINAL_HTML")
+          FINAL_HTML=$(awk 'NR==FNR{content=content $0; next} {gsub(/___RESUME_CONTENT___/, content); print} ENDRESUME' /tmp/resume_content.html - <<< "$FINAL_HTML")
 
           # 5. 写入最终的index.html
           echo "$FINAL_HTML" > index.html
