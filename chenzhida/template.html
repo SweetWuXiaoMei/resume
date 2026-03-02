@@ -12,44 +12,61 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
 </head>
 <body>
-    <div class="page-container">
-        <!-- 顶部导航 -->
-        <nav class="top-nav">
-            <span class="logo">📄</span>
-            <button class="print-btn" onclick="window.print()">打印简历</button>
-        </nav>
-
-        <!-- 头部信息 -->
-        <header class="header">
-            <h1 class="name">{{NAME}}</h1>
-            <p class="subtitle">{{TITLE}}</p>
-            <div class="contact-bar">
-                <span class="contact-item"><span class="icon">📧</span>{{EMAIL}}</span>
-                <span class="contact-item"><span class="icon">📱</span>{{PHONE}}</span>
-                <span class="contact-item"><span class="icon">🔗</span><a href="https://{{GITHUB}}" target="_blank">{{GITHUB}}</a></span>
+    <div class="resume-container">
+        <!-- 顶部头部 -->
+        <header class="resume-header">
+            <div class="header-left">
+                <div class="name-section">
+                    <h1 class="name">{{NAME}}</h1>
+                    <p class="title">{{TITLE}}</p>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <span class="contact-value">{{EMAIL}}</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📱</span>
+                        <span class="contact-value">{{PHONE}}</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">🔗</span>
+                        <a href="https://{{GITHUB}}" target="_blank" class="contact-link">{{GITHUB}}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="print-btn" onclick="window.print()">
+                    <span class="btn-icon">🖨️</span>
+                    <span class="btn-text">打印简历</span>
+                </button>
             </div>
         </header>
 
         <!-- 主要内容 -->
-        <main class="main-content">
-            <!-- CONTENT_PLACEHOLDER -->
+        <main class="resume-main">
+            ___RESUME_CONTENT___
+            ___RESUME_CONTENT___
 
             <!-- 下载按钮 -->
-            <div class="download-section">
-                <a href="resume.md" download="resume.md" class="download-link">
+            <div class="download-container">
+                <a href="resume.md" download="resume.md" class="download-btn">
                     <span class="download-icon">⬇️</span>
-                    下载 Markdown 源文件
+                    <span class="download-text">下载 Markdown 源文件</span>
                 </a>
             </div>
         </main>
 
         <!-- 页脚 -->
-        <footer class="footer">
-            <p>最后更新：<span class="update-time">{{UPDATE_TIME}}</span></p>
-            <p class="footer-links">
-                <a href="https://github.com/{{GITHUB_USER}}/resume/actions" target="_blank">构建日志</a> |
-                <a href="https://github.com/{{GITHUB_USER}}/resume" target="_blank">项目仓库</a>
-            </p>
+        <footer class="resume-footer">
+            <div class="footer-info">
+                <p>最后更新：<span class="update-time">{{UPDATE_TIME}}</span></p>
+            </div>
+            <div class="footer-links">
+                <a href="https://github.com/{{GITHUB_USER}}/resume/actions" target="_blank" class="footer-link">构建日志</a>
+                <span class="footer-divider">|</span>
+                <a href="https://github.com/{{GITHUB_USER}}/resume" target="_blank" class="footer-link">项目仓库</a>
+            </div>
         </footer>
     </div>
 </body>
