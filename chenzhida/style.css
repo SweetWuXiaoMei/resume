@@ -3,19 +3,25 @@
 :root {
     --primary-color: #0969da;
     --secondary-color: #6e7781;
+    --accent-color: #2da44e;
     --background-color: #f6f8fa;
     --text-color: #24292f;
     --border-color: #e1e4e8;
     --shadow-color: rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
 }
 
 /* 基础样式 */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    max-width: 800px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", Helvetica, Arial, sans-serif;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    line-height: 1.6;
+    line-height: 1.7;
     color: var(--text-color);
     background-color: var(--background-color);
     -webkit-font-smoothing: antialiased;
@@ -23,80 +29,158 @@ body {
 }
 
 .container {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px var(--shadow-color);
+    background: var(--card-bg);
+    padding: 50px 60px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px var(--shadow-color);
     margin: 20px 0;
-    animation: fadeIn 0.5s ease-out;
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* 顶部导航栏 */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(45, 164, 78, 0.2);
+}
+
+.download-btn:hover {
+    background: #2c974b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(45, 164, 78, 0.4);
+}
+
+.download-icon {
+    font-size: 1.2em;
 }
 
 /* 头部样式 */
 .header {
-    border-bottom: 3px solid var(--primary-color);
-    padding-bottom: 20px;
-    margin-bottom: 30px;
+    padding-bottom: 30px;
+    margin-bottom: 40px;
     text-align: center;
 }
 
 .header h1 {
     color: var(--primary-color);
-    margin-bottom: 8px;
-    font-size: 2.5em;
-    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 3em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
-.header p {
+.header .title {
     color: var(--secondary-color);
-    font-size: 1.2em;
-    margin-bottom: 20px;
+    font-size: 1.4em;
+    margin-bottom: 25px;
+    font-weight: 500;
 }
 
 .contact-info {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    margin: 20px 0;
+    gap: 20px 30px;
     justify-content: center;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
 .contact-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     color: var(--secondary-color);
     font-size: 0.95em;
+    padding: 10px 16px;
+    background: var(--background-color);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+    background: #eaeef2;
+    transform: translateY(-2px);
+}
+
+.contact-item .icon {
+    font-size: 1.2em;
+}
+
+.contact-item .value {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.contact-item .value a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.contact-item .value a:hover {
+    text-decoration: underline;
 }
 
 /* 操作按钮 */
 .actions {
-    margin: 30px 0;
-    padding: 20px;
-    background: var(--background-color);
-    border-radius: 8px;
-    border-left: 4px solid var(--primary-color);
+    margin: 40px 0;
+    padding: 25px;
+    background: linear-gradient(135deg, #f6f8fa 0%, #eaeef2 100%);
+    border-radius: 12px;
     text-align: center;
+    border: 1px solid var(--border-color);
 }
 
 .btn {
     display: inline-block;
-    padding: 12px 24px;
+    padding: 14px 28px;
     background: var(--primary-color);
     color: white;
     text-decoration: none;
-    border-radius: 6px;
-    font-weight: 500;
-    margin: 5px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin: 8px 12px;
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
     font-size: 16px;
+    box-shadow: 0 2px 8px rgba(9, 105, 218, 0.2);
 }
 
 .btn:hover {
     background: #0550ae;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(9, 105, 218, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(9, 105, 218, 0.3);
+}
+
+.btn-primary {
+    background: var(--primary-color);
 }
 
 .btn-secondary {
@@ -115,57 +199,121 @@ body {
 
 .markdown-body h2 {
     color: var(--primary-color);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 8px;
-    margin-top: 30px;
-    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 12px;
+    margin-top: 45px;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: 700;
 }
 
 .markdown-body h3 {
     color: var(--text-color);
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.markdown-body h4 {
+    color: var(--text-color);
+    margin-top: 25px;
+    margin-bottom: 12px;
+    font-size: 1.2em;
     font-weight: 600;
 }
 
 .markdown-body ul, .markdown-body ol {
-    padding-left: 2em;
+    padding-left: 1.8em;
+    margin-bottom: 20px;
 }
 
 .markdown-body li {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    line-height: 1.8;
+}
+
+.markdown-body p {
+    margin-bottom: 16px;
 }
 
 .markdown-body a {
     color: var(--primary-color);
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 .markdown-body a:hover {
+    color: #0550ae;
     text-decoration: underline;
+}
+
+.markdown-body strong {
+    color: var(--text-color);
+    font-weight: 700;
+}
+
+.markdown-body blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 16px;
+    margin: 20px 0;
+    color: var(--secondary-color);
+    background: var(--background-color);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+}
+
+.markdown-body code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9em;
+}
+
+.markdown-body pre {
+    background: var(--background-color);
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+    border: 1px solid var(--border-color);
+}
+
+.markdown-body pre code {
+    background: none;
+    padding: 0;
 }
 
 /* 页脚 */
 .last-update {
-    margin-top: 40px;
-    padding-top: 20px;
+    margin-top: 50px;
+    padding-top: 25px;
+    padding-bottom: 15px;
     border-top: 1px solid var(--border-color);
     color: var(--secondary-color);
     font-size: 14px;
     text-align: center;
 }
 
+.last-update p {
+    margin: 8px 0;
+}
+
 .last-update a {
     color: var(--primary-color);
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 .last-update a:hover {
+    color: #0550ae;
     text-decoration: underline;
 }
 
 /* 动画 */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -175,18 +323,36 @@ body {
         padding: 10px;
     }
     .container {
-        padding: 20px;
+        padding: 25px 20px;
+        border-radius: 12px;
+    }
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    .logo {
+        width: 100%;
+        text-align: center;
+    }
+    .download-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .header h1 {
+        font-size: 2.2em;
+    }
+    .header .title {
+        font-size: 1.1em;
     }
     .contact-info {
         flex-direction: column;
-        align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
-    .header h1 {
-        font-size: 2em;
-    }
-    .header p {
-        font-size: 1em;
+    .contact-item {
+        width: 100%;
+        justify-content: center;
     }
     .btn {
         display: block;
@@ -197,33 +363,78 @@ body {
     .markdown-body {
         font-size: 15px;
     }
+    .markdown-body h2 {
+        font-size: 1.5em;
+    }
+    .markdown-body h3 {
+        font-size: 1.2em;
+    }
 }
 
 /* 打印样式 */
 @media print {
-    .actions { display: none; }
-    .container {
-        box-shadow: none;
-        padding: 0;
-        margin: 0;
-    }
     body {
         background: white;
         padding: 0;
         max-width: none;
+        font-size: 12pt;
+    }
+    .container {
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+    }
+    .top-nav {
+        border-bottom: 2px solid #000;
+    }
+    .download-btn {
+        display: none;
+    }
+    .actions {
+        display: none;
     }
     .header {
         text-align: left;
+        padding-bottom: 15px;
+    }
+    .header h1 {
+        font-size: 2em;
+        color: #000;
+    }
+    .header .title {
+        color: #333;
     }
     .contact-info {
         justify-content: flex-start;
+        flex-wrap: wrap;
     }
-    .btn { display: none; }
-    .markdown-body {
-        padding: 0;
+    .contact-item {
+        background: none;
+        padding: 5px 0;
     }
-    a {
-        color: black !important;
+    .contact-item .value {
+        color: #000;
+    }
+    .contact-item .value a {
+        color: #000;
+    }
+    .markdown-body h2 {
+        border-bottom: 1px solid #000;
+        color: #000;
+    }
+    .markdown-body h3 {
+        color: #000;
+    }
+    .markdown-body a {
+        color: #000 !important;
         text-decoration: none !important;
+    }
+    .markdown-body strong {
+        color: #000;
+    }
+    .last-update {
+        border-top: 1px solid #ddd;
+        color: #666;
     }
 }

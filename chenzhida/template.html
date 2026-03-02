@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{NAME}} - 个人简历</title>
     <meta name="description" content="{{NAME}}的个人技术简历 - {{TITLE}}">
-    <meta name="keywords" content="{{NAME}},简历,全栈开发,Node.js,Python,React">
+    <meta name="keywords" content="{{NAME}},简历,Java,架构师,全栈开发">
     <meta name="author" content="{{NAME}}">
 
     <!-- 样式表 -->
@@ -15,22 +15,51 @@
 </head>
 <body>
 <div class="container">
+    <!-- 顶部导航栏（右侧下载按钮） -->
+    <div class="top-nav">
+        <div class="logo">📄 简历</div>
+        <a href="resume.md" download="resume.md" class="download-btn" title="下载Markdown原文件">
+            <span class="download-icon">⬇️</span>
+            <span class="download-text">下载源文件</span>
+        </a>
+    </div>
+
     <!-- 头部信息 -->
     <div class="header">
         <h1>{{NAME}}</h1>
-        <p>{{TITLE}}</p>
+        <p class="title">{{TITLE}}</p>
 
         <div class="contact-info">
-            <div class="contact-item">📧 {{EMAIL}}</div>
-            <div class="contact-item">🔗 {{GITHUB}}</div>
-            <div class="contact-item">📍 {{LOCATION}}</div>
-            <div class="contact-item">📱 {{PHONE}}</div>
+            <div class="contact-item">
+                <span class="icon">📧</span>
+                <span class="value">{{EMAIL}}</span>
+            </div>
+            <div class="contact-item">
+                <span class="icon">📱</span>
+                <span class="value">{{PHONE}}</span>
+            </div>
+            <div class="contact-item">
+                <span class="icon">🔗</span>
+                <a href="https://{{GITHUB}}" target="_blank" class="value">GitHub主页</a>
+            </div>
+            <div class="contact-item">
+                <span class="icon">📍</span>
+                <span class="value">{{LOCATION}}</span>
+            </div>
+            <div class="contact-item">
+                <span class="icon">🎂</span>
+                <span class="value">{{AGE}}</span>
+            </div>
+            <div class="contact-item">
+                <span class="icon">💼</span>
+                <span class="value">{{EXPERIENCE}}</span>
+            </div>
         </div>
     </div>
 
     <!-- 操作按钮 -->
     <div class="actions">
-        <a href="resume.md" class="btn">
+        <a href="resume.md" class="btn btn-primary" target="_blank">
             📝 查看Markdown源码
         </a>
         <a href="https://github.com/{{GITHUB_USER}}" class="btn btn-secondary" target="_blank">

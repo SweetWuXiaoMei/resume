@@ -49,27 +49,42 @@ jobs:
               MARKDOWN_HTML="<h2>简历文件未找到</h2><p>请创建 resume.md 文件</p>"
           fi
           
-          # 3. 替换模板中的占位符
+          # 3. 从resume.md提取个人信息
+          echo "正在解析resume.md提取个人信息..."
+          NAME=$(grep -A 1 "## 基本信息" resume.md | grep "姓名:" | sed 's/.*姓名:[[:space:]]*//' | xargs)
+          TITLE=$(grep -A 1 "## 求职意向" resume.md | grep "职位:" | sed 's/.*职位:[[:space:]]*//' | xargs)
+          EMAIL=$(grep "邮箱:" resume.md | sed 's/.*邮箱:[[:space:]]*//' | xargs)
+          PHONE=$(grep "电话:" resume.md | sed 's/.*电话:[[:space:]]*//' | xargs)
+          AGE=$(grep "年龄:" resume.md | sed 's/.*年龄:[[:space:]]*//' | xargs)
+          GENDER=$(grep "性别:" resume.md | sed 's/.*性别:[[:space:]]*//' | xargs)
+          EXPERIENCE=$(grep "工作年限:" resume.md | sed 's/.*工作年限:[[:space:]]*//' | xargs)
+
+          # 设置默认值（如果提取失败）
+          NAME=${NAME:-"陈志达"}
+          TITLE=${TITLE:-"Java高级开发 | 架构师"}
+          EMAIL=${EMAIL:-"chenzhida@apache.org"}
+          PHONE=${PHONE:-"13257360626"}
+          AGE=${AGE:-"32岁"}
+          GENDER=${GENDER:-"男"}
+          EXPERIENCE=${EXPERIENCE:-"10年经验"}
+
+          echo "提取的信息: 姓名=$NAME, 职位=$TITLE, 邮箱=$EMAIL, 电话=$PHONE"
+
+          # 4. 替换模板中的占位符
           echo "正在处理模板占位符..."
           FINAL_HTML="$TEMPLATE_CONTENT"
-
-          # 从resume.md提取信息或使用默认值
-          NAME="陈志达"
-          TITLE="Java高级开发 | 架构师 | Apache ServiceComb PMC"
-          EMAIL="chenzhida@apache.org"
-          PHONE="13257360626"
-          LOCATION="中国"
-          GITHUB="github.com/SweetWuXiaoMei"
-          GITHUB_USER="${{ github.repository_owner }}"
 
           # 依次替换所有占位符（使用bash字符串替换避免特殊字符问题）
           FINAL_HTML="${FINAL_HTML//\{\{NAME\}\}/$NAME}"
           FINAL_HTML="${FINAL_HTML//\{\{TITLE\}\}/$TITLE}"
           FINAL_HTML="${FINAL_HTML//\{\{EMAIL\}\}/$EMAIL}"
-          FINAL_HTML="${FINAL_HTML//\{\{GITHUB\}\}/$GITHUB}"
-          FINAL_HTML="${FINAL_HTML//\{\{GITHUB_USER\}\}/$GITHUB_USER}"
-          FINAL_HTML="${FINAL_HTML//\{\{LOCATION\}\}/$LOCATION}"
+          FINAL_HTML="${FINAL_HTML//\{\{GITHUB\}\}/github.com/sweetwuxiaomei}"
+          FINAL_HTML="${FINAL_HTML//\{\{GITHUB_USER\}\}/sweetwuxiaomei}"
+          FINAL_HTML="${FINAL_HTML//\{\{LOCATION\}\}/中国}"
           FINAL_HTML="${FINAL_HTML//\{\{PHONE\}\}/$PHONE}"
+          FINAL_HTML="${FINAL_HTML//\{\{AGE\}\}/$AGE}"
+          FINAL_HTML="${FINAL_HTML//\{\{GENDER\}\}/$GENDER}"
+          FINAL_HTML="${FINAL_HTML//\{\{EXPERIENCE\}\}/$EXPERIENCE}"
           UPDATE_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')
           FINAL_HTML="${FINAL_HTML//\{\{UPDATE_TIME\}\}/$UPDATE_TIME}"
 
@@ -146,7 +161,7 @@ jobs:
           echo "- [chenzhida/index.html](https://github.com/${{ github.repository }}/blob/master/chenzhida/index.html) (源目录)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**查看简历**: " >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub Pages: \`https://${{ github.repository_owner }}.github.io/${{ github.repository }}/\`" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub Pages: \`https://sweetwuxiaomei.github.io/resume/\`" >> $GITHUB_STEP_SUMMARY
           echo "- GitHub 在线预览: \`https://github.com/${{ github.repository }}/blob/master/index.html\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**提示**: 请在仓库 Settings -> Pages 中启用 GitHub Pages，选择 'Deploy from a branch' -> 'master' -> '/' 目录。" >> $GITHUB_STEP_SUMMARY
