@@ -1,0 +1,200 @@
+/* style.css - 简历专用样式 */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+    color: #24292f;
+    background-color: #f6f8fa;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.header {
+    border-bottom: 3px solid #0969da;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.header h1 {
+    color: #0969da;
+    margin-bottom: 8px;
+    font-size: 2.5em;
+}
+
+.header p {
+    color: #57606a;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.contact-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #57606a;
+}
+
+.actions {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f6f8fa;
+    border-radius: 8px;
+    border-left: 4px solid #0969da;
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #0969da;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    margin: 5px 10px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background: #0550ae;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(9, 105, 218, 0.3);
+}
+
+.btn-secondary {
+    background: #6e7781;
+}
+
+.btn-secondary:hover {
+    background: #57606a;
+}
+
+.btn-danger {
+    background: #cf222e;
+}
+
+.btn-danger:hover {
+    background: #a40e26;
+}
+
+.markdown-body {
+    font-size: 16px;
+    padding: 20px 0;
+}
+
+.markdown-body h2 {
+    color: #0969da;
+    border-bottom: 1px solid #e1e4e8;
+    padding-bottom: 8px;
+    margin-top: 30px;
+}
+
+.markdown-body h3 {
+    color: #24292f;
+    margin-top: 20px;
+}
+
+.markdown-body ul, .markdown-body ol {
+    padding-left: 2em;
+}
+
+.markdown-body li {
+    margin-bottom: 8px;
+}
+
+.markdown-body strong {
+    color: #24292f;
+}
+
+.markdown-body a {
+    color: #0969da;
+    text-decoration: none;
+}
+
+.markdown-body a:hover {
+    text-decoration: underline;
+}
+
+.last-update {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e4e8;
+    color: #6e7781;
+    font-size: 14px;
+    text-align: center;
+}
+
+.last-update a {
+    color: #0969da;
+    text-decoration: none;
+}
+
+.last-update a:hover {
+    text-decoration: underline;
+}
+
+/* 打印样式 */
+@media print {
+    .actions { display: none; }
+    .container {
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+    }
+    body {
+        background: white;
+        padding: 0;
+    }
+    .header {
+        text-align: left;
+    }
+    .contact-info {
+        justify-content: flex-start;
+    }
+    .btn { display: none; }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        padding: 20px;
+    }
+    .contact-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .header h1 {
+        font-size: 2em;
+    }
+    .btn {
+        display: block;
+        margin: 10px 0;
+        width: 100%;
+        text-align: center;
+    }
+}
