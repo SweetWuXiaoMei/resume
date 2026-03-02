@@ -59,15 +59,16 @@ jobs:
           GITHUB="github.com/SweetWuXiaoMei"
           GITHUB_USER="${{ github.repository_owner }}"
 
-          # 依次替换所有占位符
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{NAME}}/$NAME/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{TITLE}}/$TITLE/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{EMAIL}}/$EMAIL/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{GITHUB}}/$GITHUB/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{GITHUB_USER}}/$GITHUB_USER/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{LOCATION}}/$LOCATION/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{PHONE}}/$PHONE/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{UPDATE_TIME}}/$(date '+%Y年%m月%d日 %H:%M:%S')/g")
+          # 依次替换所有占位符（使用bash字符串替换避免特殊字符问题）
+          FINAL_HTML="${FINAL_HTML//\{\{NAME\}\}/$NAME}"
+          FINAL_HTML="${FINAL_HTML//\{\{TITLE\}\}/$TITLE}"
+          FINAL_HTML="${FINAL_HTML//\{\{EMAIL\}\}/$EMAIL}"
+          FINAL_HTML="${FINAL_HTML//\{\{GITHUB\}\}/$GITHUB}"
+          FINAL_HTML="${FINAL_HTML//\{\{GITHUB_USER\}\}/$GITHUB_USER}"
+          FINAL_HTML="${FINAL_HTML//\{\{LOCATION\}\}/$LOCATION}"
+          FINAL_HTML="${FINAL_HTML//\{\{PHONE\}\}/$PHONE}"
+          UPDATE_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')
+          FINAL_HTML="${FINAL_HTML//\{\{UPDATE_TIME\}\}/$UPDATE_TIME}"
 
           # 4. 替换内容区域（使用临时文件和字符串替换）
           if echo "$FINAL_HTML" | grep -q "{{RESUME_CONTENT}}"; then
