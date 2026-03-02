@@ -18,14 +18,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Pandoc and dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            pandoc \
-            texlive-xetex \
-            texlive-fonts-recommended \
-            texlive-lang-chinese
+#      - name: Setup Pandoc and dependencies
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y \
+#            pandoc \
+#            texlive-xetex \
+#            texlive-fonts-recommended \
+#            texlive-lang-chinese
 
       - name: Generate HTML from template
         run: |
@@ -61,26 +61,26 @@ jobs:
           
           echo "✅ HTML简历已生成"
 
-      - name: Generate PDF resume
-        run: |
-          cd chenzhida
-          
-          if [ -f "resume.md" ]; then
-              pandoc resume.md \
-                -f markdown \
-                -t pdf \
-                -o resume.pdf \
-                --pdf-engine=xelatex \
-                -V mainfont="Source Han Serif SC" \
-                -V sansfont="Source Han Sans SC" \
-                -V geometry:margin=1in \
-                -V colorlinks=true \
-                -V linkcolor=blue
-          
-              echo "✅ PDF简历已生成"
-          else
-              echo "⚠️ resume.md 文件不存在，跳过PDF生成"
-          fi
+#      - name: Generate PDF resume
+#        run: |
+#          cd chenzhida
+#
+#          if [ -f "resume.md" ]; then
+#              pandoc resume.md \
+#                -f markdown \
+#                -t pdf \
+#                -o resume.pdf \
+#                --pdf-engine=xelatex \
+#                -V mainfont="Source Han Serif SC" \
+#                -V sansfont="Source Han Sans SC" \
+#                -V geometry:margin=1in \
+#                -V colorlinks=true \
+#                -V linkcolor=blue
+#
+#              echo "✅ PDF简历已生成"
+#          else
+#              echo "⚠️ resume.md 文件不存在，跳过PDF生成"
+#          fi
 
       - name: Commit and push generated files
         run: |
