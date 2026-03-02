@@ -92,8 +92,8 @@ jobs:
           echo "正在注入简历内容..."
           echo "$FINAL_HTML" > /tmp/template.html
           echo "$MARKDOWN_HTML" > /tmp/resume_content.html
-          sed -i "s|___RESUME_CONTENT___||; r /tmp/resume_content.html" /tmp/template.html
-          FINAL_HTML=$(cat /tmp/template.html)
+          sed -e "/___RESUME_CONTENT___/ {r /tmp/resume_content.html; d}" /tmp/template.html > /tmp/final.html
+          FINAL_HTML=$(cat /tmp/final.html)
 
           # 5. 写入最终的index.html
           echo "$FINAL_HTML" > index.html
