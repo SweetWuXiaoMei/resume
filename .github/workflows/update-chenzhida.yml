@@ -56,7 +56,7 @@ jobs:
           EMAIL="chenzhida@apache.org"
           PHONE="13257360626"
           LOCATION="中国"
-          GITHUB="github.com/chenzhida"
+          GITHUB="github.com/SweetWuXiaoMei"
           GITHUB_USER="${{ github.repository_owner }}"
 
           # 依次替换所有占位符
