@@ -1,4 +1,4 @@
-/* style.css - 简历专用样式 */
+/* style.css - HTML简历专用样式 */
 
 :root {
     --primary-color: #0969da;
@@ -28,6 +28,7 @@ body {
     border-radius: 12px;
     box-shadow: 0 2px 10px var(--shadow-color);
     margin: 20px 0;
+    animation: fadeIn 0.5s ease-out;
 }
 
 /* 头部样式 */
@@ -134,11 +135,6 @@ body {
     margin-bottom: 8px;
 }
 
-.markdown-body strong {
-    color: var(--text-color);
-    font-weight: 600;
-}
-
 .markdown-body a {
     color: var(--primary-color);
     text-decoration: none;
@@ -146,21 +142,6 @@ body {
 
 .markdown-body a:hover {
     text-decoration: underline;
-}
-
-.markdown-body blockquote {
-    border-left: 4px solid var(--primary-color);
-    padding-left: 1em;
-    color: var(--secondary-color);
-    margin-left: 0;
-}
-
-.markdown-body code {
-    background: var(--background-color);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    font-size: 0.9em;
 }
 
 /* 页脚 */
@@ -182,33 +163,10 @@ body {
     text-decoration: underline;
 }
 
-/* 打印样式 */
-@media print {
-    .actions { display: none; }
-    .container {
-        box-shadow: none;
-        padding: 0;
-        margin: 0;
-    }
-    body {
-        background: white;
-        padding: 0;
-        max-width: none;
-    }
-    .header {
-        text-align: left;
-    }
-    .contact-info {
-        justify-content: flex-start;
-    }
-    .btn { display: none; }
-    .markdown-body {
-        padding: 0;
-    }
-    a {
-        color: black !important;
-        text-decoration: none !important;
-    }
+/* 动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* 移动端适配 */
@@ -241,25 +199,31 @@ body {
     }
 }
 
-/* 动画效果 */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.container {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* 代码块样式 */
-.markdown-body pre {
-    background: #f6f8fa;
-    border-radius: 6px;
-    padding: 16px;
-    overflow: auto;
-}
-
-.markdown-body pre code {
-    background: none;
-    padding: 0;
+/* 打印样式 */
+@media print {
+    .actions { display: none; }
+    .container {
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+    }
+    body {
+        background: white;
+        padding: 0;
+        max-width: none;
+    }
+    .header {
+        text-align: left;
+    }
+    .contact-info {
+        justify-content: flex-start;
+    }
+    .btn { display: none; }
+    .markdown-body {
+        padding: 0;
+    }
+    a {
+        color: black !important;
+        text-decoration: none !important;
+    }
 }

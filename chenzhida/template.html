@@ -12,22 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
-
-    <style>
-        /* 内联关键CSS，确保页面加载时样式立即可见 */
-        .markdown-body {
-            box-sizing: border-box;
-            min-width: 200px;
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 45px;
-        }
-        @media (max-width: 767px) {
-            .markdown-body {
-                padding: 15px;
-            }
-        }
-    </style>
 </head>
 <body>
 <div class="container">
@@ -46,10 +30,7 @@
 
     <!-- 操作按钮 -->
     <div class="actions">
-        <a href="resume.pdf" class="btn" id="pdf-download-btn">
-            📄 下载PDF简历
-        </a>
-        <a href="resume.md" class="btn btn-secondary">
+        <a href="resume.md" class="btn">
             📝 查看Markdown源码
         </a>
         <a href="https://github.com/{{GITHUB_USER}}" class="btn btn-secondary" target="_blank">
@@ -80,11 +61,20 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 设置PDF下载文件名
-        const pdfBtn = document.getElementById('pdf-download-btn');
-        if (pdfBtn) {
-            const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            pdfBtn.download = `{{NAME}}_简历_${today}.pdf`;
+        // 更新显示时间
+        const updateTime = document.getElementById('update-time');
+        if (updateTime && updateTime.textContent.includes('{{UPDATE_TIME}}')) {
+            const now = new Date();
+            const timeString = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            updateTime.textContent = timeString;
         }
 
         // 为所有外部链接添加target="_blank"
@@ -94,13 +84,6 @@
                 link.rel = 'noopener noreferrer';
             }
         });
-
-        // 添加语法高亮（如果有代码块）
-        if (typeof hljs !== 'undefined') {
-            document.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightBlock(block);
-            });
-        }
 
         // 平滑滚动
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

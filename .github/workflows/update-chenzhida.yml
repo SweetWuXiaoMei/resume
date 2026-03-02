@@ -1,4 +1,4 @@
-name: Build ChenZhida's Resume
+name: Build HTML Resume
 
 on:
   push:
@@ -6,11 +6,12 @@ on:
       - 'chenzhida/resume.md'
       - 'chenzhida/template.html'
       - 'chenzhida/style.css'
-  workflow_dispatch:
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
-  build:
+  build-html:
     runs-on: ubuntu-latest
+    timeout-minutes: 5  # 设置超时时间
 
     steps:
       - name: Checkout repository
@@ -18,81 +19,107 @@ jobs:
         with:
           fetch-depth: 0
 
-#      - name: Setup Pandoc and dependencies
-#        run: |
-#          sudo apt-get update
-#          sudo apt-get install -y \
-#            pandoc \
-#            texlive-xetex \
-#            texlive-fonts-recommended \
-#            texlive-lang-chinese
+      - name: Setup Pandoc (仅安装pandoc，无需TeX)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+          echo "✅ Pandoc 已安装"
 
       - name: Generate HTML from template
         run: |
           cd chenzhida
           
-          # 读取模板
+          # 1. 读取模板
+          if [ ! -f "template.html" ]; then
+              echo "❌ 模板文件 template.html 不存在"
+              exit 1
+          fi
+          
           TEMPLATE_CONTENT=$(cat template.html)
           
-          # 转换Markdown为HTML
+          # 2. 转换Markdown为HTML
           if [ -f "resume.md" ]; then
-              MARKDOWN_HTML=$(pandoc resume.md -f markdown -t html --standalone)
+              echo "正在转换 resume.md 为 HTML..."
+              MARKDOWN_HTML=$(pandoc resume.md -f markdown -t html --standalone 2>/dev/null || echo "<p>Markdown转换失败，请检查格式</p>")
           else
+              echo "❌ resume.md 文件不存在"
               MARKDOWN_HTML="<h2>简历文件未找到</h2><p>请创建 resume.md 文件</p>"
           fi
           
-          # 替换模板中的占位符
-          FINAL_HTML=$(echo "$TEMPLATE_CONTENT" | \
-            sed "s|{{NAME}}|陈志达|g" | \
-            sed "s|{{TITLE}}|全栈开发者 \| 技术热爱者 \| 问题解决者|g" | \
-            sed "s|{{EMAIL}}|sweetwuxiaomei@example.com|g" | \
-            sed "s|{{GITHUB}}|github.com/SweetWuXiaoMei|g" | \
-            sed "s|{{GITHUB_USER}}|SweetWuXiaoMei|g" | \
-            sed "s|{{LOCATION}}|上海|g" | \
-            sed "s|{{PHONE}}|(+86) 138-XXXX-XXXX|g" | \
-            sed "s|{{UPDATE_TIME}}|$(date '+%Y年%m月%d日 %H:%M:%S')|g")
+          # 3. 替换模板中的占位符
+          echo "正在处理模板占位符..."
+          FINAL_HTML="$TEMPLATE_CONTENT"
           
-          # 替换内容区域
-          FINAL_HTML=$(echo "$FINAL_HTML" | \
-            sed "s|<!-- {{RESUME_CONTENT}} -->|$MARKDOWN_HTML|")
+          # 依次替换所有占位符
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{NAME}}/陈志达/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{TITLE}}/全栈开发者 | 技术热爱者 | 问题解决者/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{EMAIL}}/sweetwuxiaomei@example.com/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{GITHUB}}/github.com\/SweetWuXiaoMei/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{GITHUB_USER}}/SweetWuXiaoMei/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{LOCATION}}/上海/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{PHONE}}/(+86) 138-XXXX-XXXX/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{UPDATE_TIME}}/$(date '+%Y年%m月%d日 %H:%M:%S')/g")
           
-          # 写入最终的index.html
+          # 4. 替换内容区域（使用更可靠的方法）
+          if echo "$FINAL_HTML" | grep -q "{{RESUME_CONTENT}}"; then
+              FINAL_HTML=$(echo "$FINAL_HTML" | sed "s|{{RESUME_CONTENT}}|$MARKDOWN_HTML|")
+          elif echo "$FINAL_HTML" | grep -q "<!-- {{RESUME_CONTENT}} -->"; then
+              FINAL_HTML=$(echo "$FINAL_HTML" | sed "s|<!-- {{RESUME_CONTENT}} -->|$MARKDOWN_HTML|")
+          else
+              # 如果没有找到占位符，在markdown-body div中插入内容
+              FINAL_HTML=$(echo "$FINAL_HTML" | sed "s|<div class=\"markdown-body\" id=\"resume-content\">|<div class=\"markdown-body\" id=\"resume-content\">$MARKDOWN_HTML|")
+          fi
+          
+          # 5. 写入最终的index.html
           echo "$FINAL_HTML" > index.html
           
-          echo "✅ HTML简历已生成"
+          # 6. 验证生成的文件
+          if [ -s "index.html" ]; then
+              echo "✅ HTML简历已成功生成"
+              echo "文件大小: $(wc -c < index.html) 字节"
+          else
+              echo "❌ index.html 文件为空或生成失败"
+              exit 1
+          fi
 
-#      - name: Generate PDF resume
-#        run: |
-#          cd chenzhida
-#
-#          if [ -f "resume.md" ]; then
-#              pandoc resume.md \
-#                -f markdown \
-#                -t pdf \
-#                -o resume.pdf \
-#                --pdf-engine=xelatex \
-#                -V mainfont="Source Han Serif SC" \
-#                -V sansfont="Source Han Sans SC" \
-#                -V geometry:margin=1in \
-#                -V colorlinks=true \
-#                -V linkcolor=blue
-#
-#              echo "✅ PDF简历已生成"
-#          else
-#              echo "⚠️ resume.md 文件不存在，跳过PDF生成"
-#          fi
+      - name: Validate and preview
+        run: |
+          cd chenzhida
+          echo "=== 生成的文件预览（前10行）==="
+          head -20 index.html
+          echo "================================"
+          
+          # 检查是否包含必要的内容
+          if grep -q "陈志达" index.html; then
+              echo "✅ 简历内容检测成功"
+          else
+              echo "⚠️  可能未正确替换占位符"
+          fi
 
-      - name: Commit and push generated files
+      - name: Commit generated HTML
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          # 检查文件是否有变化
-          if git diff --quiet HEAD -- chenzhida/index.html chenzhida/resume.pdf 2>/dev/null; then
-              echo "⚠️ 没有文件变化，跳过提交"
+          # 只提交index.html
+          if git diff --quiet HEAD -- chenzhida/index.html 2>/dev/null; then
+              echo "⚠️ index.html 没有变化，跳过提交"
           else
-              git add chenzhida/index.html chenzhida/resume.pdf
-              git commit -m "自动化构建简历 [$(date +'%Y-%m-%d %H:%M:%S')]"
+              git add chenzhida/index.html
+              git commit -m "自动化更新HTML简历 [$(date +'%Y-%m-%d %H:%M:%S')]"
               git push
-              echo "✅ 已提交生成的文件"
+              echo "✅ 已提交更新的HTML简历"
           fi
+
+      - name: Create build summary
+        if: success()
+        run: |
+          echo "## 🎉 HTML简历构建成功" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**生成的文件**: [index.html](https://github.com/${{ github.repository }}/blob/main/chenzhida/index.html)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**查看简历**: " >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub Pages: \`https://sweetwuxiaomei.github.io/resume/chenzhida/\`" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub 源文件: \`https://github.com/SweetWuXiaoMei/resume/blob/main/chenzhida/index.html\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "下次更新只需编辑 \`resume.md\` 文件即可。" >> $GITHUB_STEP_SUMMARY
