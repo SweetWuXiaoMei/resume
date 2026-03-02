@@ -88,11 +88,11 @@ jobs:
           UPDATE_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')
           FINAL_HTML="${FINAL_HTML//\{\{UPDATE_TIME\}\}/$UPDATE_TIME}"
 
-          # 4. 替换内容区域（使用sed）
+          # 4. 替换内容区域（使用sed替换注释占位符）
           echo "正在注入简历内容..."
           echo "$FINAL_HTML" > /tmp/template.html
           echo "$MARKDOWN_HTML" > /tmp/resume_content.html
-          sed -e "/___RESUME_CONTENT___/ {r /tmp/resume_content.html; d}" /tmp/template.html > /tmp/final.html
+          sed -e "/<!-- CONTENT_PLACEHOLDER -->/ {r /tmp/resume_content.html; d}" /tmp/template.html > /tmp/final.html
           FINAL_HTML=$(cat /tmp/final.html)
 
           # 5. 写入最终的index.html
