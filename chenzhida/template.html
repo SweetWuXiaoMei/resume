@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{NAME}} - 个人简历</title>
+    <meta name="description" content="{{NAME}}的个人技术简历 - {{TITLE}}">
+    <meta name="keywords" content="{{NAME}},简历,全栈开发,Node.js,Python,React">
+    <meta name="author" content="{{NAME}}">
+
+    <!-- 样式表 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+
+    <style>
+        /* 内联关键CSS，确保页面加载时样式立即可见 */
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+        }
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 头部信息 -->
+    <div class="header">
+        <h1>{{NAME}}</h1>
+        <p>{{TITLE}}</p>
+
+        <div class="contact-info">
+            <div class="contact-item">📧 {{EMAIL}}</div>
+            <div class="contact-item">🔗 {{GITHUB}}</div>
+            <div class="contact-item">📍 {{LOCATION}}</div>
+            <div class="contact-item">📱 {{PHONE}}</div>
+        </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="actions">
+        <a href="resume.pdf" class="btn" id="pdf-download-btn">
+            📄 下载PDF简历
+        </a>
+        <a href="resume.md" class="btn btn-secondary">
+            📝 查看Markdown源码
+        </a>
+        <a href="https://github.com/{{GITHUB_USER}}" class="btn btn-secondary" target="_blank">
+            🐱 GitHub主页
+        </a>
+        <button class="btn btn-secondary" onclick="window.print()">
+            🖨️ 打印简历
+        </button>
+    </div>
+
+    <!-- Markdown内容区域 -->
+    <div class="markdown-body" id="resume-content">
+        <!-- {{RESUME_CONTENT}} 占位符，将被实际内容替换 -->
+    </div>
+
+    <!-- 页脚信息 -->
+    <div class="last-update">
+        <p>
+            最后更新: <span id="update-time">{{UPDATE_TIME}}</span> |
+            自动生成自 <a href="resume.md">resume.md</a>
+        </p>
+        <p>
+            <a href="https://github.com/{{GITHUB_USER}}/resume/actions" target="_blank">查看构建日志</a> |
+            <a href="https://github.com/{{GITHUB_USER}}/resume" target="_blank">项目仓库</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 设置PDF下载文件名
+        const pdfBtn = document.getElementById('pdf-download-btn');
+        if (pdfBtn) {
+            const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            pdfBtn.download = `{{NAME}}_简历_${today}.pdf`;
+        }
+
+        // 为所有外部链接添加target="_blank"
+        document.querySelectorAll('a[href^="http"]').forEach(link => {
+            if (link.hostname !== window.location.hostname) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            }
+        });
+
+        // 添加语法高亮（如果有代码块）
+        if (typeof hljs !== 'undefined') {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+            });
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId !== '#') {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

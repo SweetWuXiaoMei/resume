@@ -4,7 +4,8 @@ on:
   push:
     paths:
       - 'chenzhida/resume.md'
-      - 'chenzhida/style.css'  # 样式文件更新时也触发
+      - 'chenzhida/template.html'
+      - 'chenzhida/style.css'
   workflow_dispatch:
 
 jobs:
@@ -12,147 +13,86 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Pandoc
+      - name: Setup Pandoc and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended
+          sudo apt-get install -y \
+            pandoc \
+            texlive-xetex \
+            texlive-fonts-recommended \
+            texlive-lang-chinese
 
-      - name: Generate HTML
+      - name: Generate HTML from template
         run: |
           cd chenzhida
           
-          # 1. 创建HTML文件，包含样式链接
-          cat > index.html << 'EOF'
-          <!DOCTYPE html>
-          <html lang="zh-CN">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>陈志达 - 个人简历</title>
-              <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
-              <link rel="stylesheet" href="style.css">
-              <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
-          </head>
-          <body>
-              <div class="container">
-                  <div class="header">
-                      <h1>陈志达</h1>
-                      <p>全栈开发者 | 技术热爱者 | 问题解决者</p>
+          # 读取模板
+          TEMPLATE_CONTENT=$(cat template.html)
           
-                      <div class="contact-info">
-                          <div class="contact-item">📧 sweetwuxiaomei@example.com</div>
-                          <div class="contact-item">🔗 github.com/SweetWuXiaoMei</div>
-                          <div class="contact-item">📍 上海</div>
-                          <div class="contact-item">📱 (+86) 138-XXXX-XXXX</div>
-                      </div>
-                  </div>
-          
-                  <div class="actions">
-                      <a href="resume.pdf" class="btn" download="陈志达_简历_$(date +%Y%m%d).pdf">
-                          📄 下载PDF简历
-                      </a>
-                      <a href="resume.md" class="btn btn-secondary">
-                          📝 查看Markdown源码
-                      </a>
-                      <a href="https://github.com/SweetWuXiaoMei" class="btn btn-secondary" target="_blank">
-                          🐱 GitHub主页
-                      </a>
-                  </div>
-          
-                  <div class="markdown-body">
-          EOF
-          
-          # 2. 将resume.md内容转换为HTML
+          # 转换Markdown为HTML
           if [ -f "resume.md" ]; then
-              pandoc resume.md -f markdown -t html >> index.html
+              MARKDOWN_HTML=$(pandoc resume.md -f markdown -t html --standalone)
           else
-              echo "<h2>简历文件未找到</h2><p>请创建 resume.md 文件</p>" >> index.html
+              MARKDOWN_HTML="<h2>简历文件未找到</h2><p>请创建 resume.md 文件</p>"
           fi
           
-          # 3. 关闭HTML标签
-          cat >> index.html << 'EOF'
-                  </div>
+          # 替换模板中的占位符
+          FINAL_HTML=$(echo "$TEMPLATE_CONTENT" | \
+            sed "s|{{NAME}}|陈志达|g" | \
+            sed "s|{{TITLE}}|全栈开发者 \| 技术热爱者 \| 问题解决者|g" | \
+            sed "s|{{EMAIL}}|sweetwuxiaomei@example.com|g" | \
+            sed "s|{{GITHUB}}|github.com/SweetWuXiaoMei|g" | \
+            sed "s|{{GITHUB_USER}}|SweetWuXiaoMei|g" | \
+            sed "s|{{LOCATION}}|上海|g" | \
+            sed "s|{{PHONE}}|(+86) 138-XXXX-XXXX|g" | \
+            sed "s|{{UPDATE_TIME}}|$(date '+%Y年%m月%d日 %H:%M:%S')|g")
           
-                  <div class="last-update">
-                      <p>最后更新: <span id="update-time">$(date '+%Y年%m月%d日 %H:%M:%S')</span></p>
-                      <p>自动生成自 <a href="resume.md">resume.md</a> | 
-                         <a href="https://github.com/SweetWuXiaoMei/resume/actions" target="_blank">查看构建日志</a>
-                      </p>
-                  </div>
-              </div>
+          # 替换内容区域
+          FINAL_HTML=$(echo "$FINAL_HTML" | \
+            sed "s|<!-- {{RESUME_CONTENT}} -->|$MARKDOWN_HTML|")
           
-              <script>
-                  // 更新页面时间
-                  document.addEventListener('DOMContentLoaded', function() {
-                      const now = new Date();
-                      const options = { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit',
-                          hour12: false
-                      };
-                      const timeString = now.toLocaleDateString('zh-CN', options);
-                      document.getElementById('update-time').textContent = timeString;
+          # 写入最终的index.html
+          echo "$FINAL_HTML" > index.html
           
-                      // 为PDF链接添加日期
-                      const pdfLink = document.querySelector('a[href="resume.pdf"]');
-                      if (pdfLink) {
-                          const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-                          pdfLink.download = `陈志达_简历_${today}.pdf`;
-                      }
-                  });
-              </script>
-          </body>
-          </html>
-          EOF
-          
-          echo "✅ HTML已生成"
+          echo "✅ HTML简历已生成"
 
-      - name: Generate PDF
+      - name: Generate PDF resume
         run: |
           cd chenzhida
           
-          # 生成PDF
           if [ -f "resume.md" ]; then
               pandoc resume.md \
                 -f markdown \
                 -t pdf \
                 -o resume.pdf \
                 --pdf-engine=xelatex \
-                -V mainfont="SimSun" \
+                -V mainfont="Source Han Serif SC" \
+                -V sansfont="Source Han Sans SC" \
                 -V geometry:margin=1in \
                 -V colorlinks=true \
                 -V linkcolor=blue
-              echo "✅ PDF已生成"
+          
+              echo "✅ PDF简历已生成"
           else
-              echo "⚠️  resume.md 文件不存在，跳过PDF生成"
+              echo "⚠️ resume.md 文件不存在，跳过PDF生成"
           fi
 
-      - name: Commit and Push
+      - name: Commit and push generated files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          # 只添加实际生成的文件
-          git add chenzhida/index.html
-          
-          # 如果PDF存在，添加它
-          if [ -f "chenzhida/resume.pdf" ]; then
-              git add chenzhida/resume.pdf
+          # 检查文件是否有变化
+          if git diff --quiet HEAD -- chenzhida/index.html chenzhida/resume.pdf 2>/dev/null; then
+              echo "⚠️ 没有文件变化，跳过提交"
+          else
+              git add chenzhida/index.html chenzhida/resume.pdf
+              git commit -m "自动化构建简历 [$(date +'%Y-%m-%d %H:%M:%S')]"
+              git push
+              echo "✅ 已提交生成的文件"
           fi
-          
-          # 如果有样式文件，也添加
-          if [ -f "chenzhida/style.css" ]; then
-              git add chenzhida/style.css
-          fi
-          
-          git commit -m "自动化构建简历: 更新HTML和PDF [$(date +%Y%m%d-%H%M%S)]" || echo "无更改可提交"
-          git push
