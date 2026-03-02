@@ -88,11 +88,11 @@ jobs:
           UPDATE_TIME=$(date '+%Y年%m月%d日 %H:%M:%S')
           FINAL_HTML="${FINAL_HTML//\{\{UPDATE_TIME\}\}/$UPDATE_TIME}"
 
-          # 4. 替换内容区域（使用 sed 单引号模式）
+          # 4. 替换内容区域（使用 sed 正确语法）
           echo "正在注入简历内容..."
           echo "$FINAL_HTML" > /tmp/template.html
           echo "$MARKDOWN_HTML" > /tmp/content.html
-          FINAL_HTML=$(sed -e ':a;r /tmp/content.html' -e '/\{\{RESUME_CONTENT\}\}/{ba;t};d' /tmp/template.html)
+          FINAL_HTML=$(sed -e '/\{\{RESUME_CONTENT\}\}/{r /tmp/content.html}/' /tmp/template.html)
 
           # 5. 写入最终的index.html
           echo "$FINAL_HTML" > index.html
