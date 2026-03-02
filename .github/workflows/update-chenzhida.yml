@@ -111,12 +111,14 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
-          # 只提交index.html
-          if git diff --quiet HEAD -- chenzhida/index.html 2>/dev/null; then
+
+          # 添加并提交index.html
+          git add chenzhida/index.html
+
+          # 检查是否有待提交的变更
+          if git diff --cached --quiet; then
               echo "⚠️ index.html 没有变化，跳过提交"
           else
-              git add chenzhida/index.html
               git commit -m "自动化更新HTML简历 [$(date +'%Y-%m-%d %H:%M:%S')]"
               git push
               echo "✅ 已提交更新的HTML简历"
@@ -127,7 +129,7 @@ jobs:
         run: |
           echo "## 🎉 HTML简历构建成功" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**生成的文件**: [index.html](https://github.com/${{ github.repository }}/blob/main/chenzhida/index.html)" >> $GITHUB_STEP_SUMMARY
+          echo "**生成的文件**: [index.html](htmtps://github.co/${{ github.repository }}/blob/main/chenzhida/index.html)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**查看简历**: " >> $GITHUB_STEP_SUMMARY
           echo "- GitHub Pages: \`https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}/chenzhida/\`" >> $GITHUB_STEP_SUMMARY
