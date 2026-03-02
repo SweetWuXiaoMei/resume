@@ -8,71 +8,31 @@
     <meta name="keywords" content="陈志达,简历,Java,架构师,全栈开发">
     <meta name="author" content="陈志达">
 
-    <!-- 样式表 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
 </head>
 <body>
-<div class="container">
-    <!-- 顶部导航栏（右侧下载按钮） -->
-    <div class="top-nav">
-        <div class="logo">📄 简历</div>
-        <a href="resume.md" download="resume.md" class="download-btn" title="下载Markdown原文件">
-            <span class="download-icon">⬇️</span>
-            <span class="download-text">下载源文件</span>
-        </a>
-    </div>
+    <div class="page-container">
+        <!-- 顶部导航 -->
+        <nav class="top-nav">
+            <span class="logo">📄</span>
+            <button class="print-btn" onclick="window.print()">打印简历</button>
+        </nav>
 
-    <!-- 头部信息 -->
-    <div class="header">
-        <h1>陈志达</h1>
-        <p class="title">Java高级开发 | 架构师</p>
+        <!-- 头部信息 -->
+        <header class="header">
+            <h1 class="name">陈志达</h1>
+            <p class="subtitle">Java高级开发 | 架构师</p>
+            <div class="contact-bar">
+                <span class="contact-item"><span class="icon">📧</span>chenzhida@apache.org</span>
+                <span class="contact-item"><span class="icon">📱</span>13257360626</span>
+                <span class="contact-item"><span class="icon">🔗</span><a href="https://github.com/sweetwuxiaomei" target="_blank">github.com/sweetwuxiaomei</a></span>
+            </div>
+        </header>
 
-        <div class="contact-info">
-            <div class="contact-item">
-                <span class="icon">📧</span>
-                <span class="value">chenzhida@apache.org</span>
-            </div>
-            <div class="contact-item">
-                <span class="icon">📱</span>
-                <span class="value">13257360626</span>
-            </div>
-            <div class="contact-item">
-                <span class="icon">🔗</span>
-                <a href="https://github.com/sweetwuxiaomei" target="_blank" class="value">GitHub主页</a>
-            </div>
-            <div class="contact-item">
-                <span class="icon">📍</span>
-                <span class="value">中国</span>
-            </div>
-            <div class="contact-item">
-                <span class="icon">🎂</span>
-                <span class="value">32岁</span>
-            </div>
-            <div class="contact-item">
-                <span class="icon">💼</span>
-                <span class="value">10年经验</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 操作按钮 -->
-    <div class="actions">
-        <a href="resume.md" class="btn btn-primary" target="_blank">
-            📝 查看Markdown源码
-        </a>
-        <a href="https://github.com/sweetwuxiaomei" class="btn btn-secondary" target="_blank">
-            🐱 GitHub主页
-        </a>
-        <button class="btn btn-secondary" onclick="window.print()">
-            🖨️ 打印简历
-        </button>
-    </div>
-
-    <!-- Markdown内容区域 -->
-    <div class="markdown-body" id="resume-content">
-        <h1 id="个人简历">个人简历</h1>
+        <!-- 主要内容 -->
+        <main class="main-content">
+            <h1 id="个人简历">个人简历</h1>
 <p><strong>努力超越自己，每天进步一点点</strong></p>
 <h2 id="基本信息">基本信息</h2>
 <ul>
@@ -273,61 +233,24 @@ SpringBoot、SpringMVC、MyBatis、MySQL、Redis、RabbitMQ、WebSocket、Nginx�
 <li>结合Netty优化TCP连接管理，避免连接风暴导致的Socket资源耗尽问题。</li>
 </ol></li>
 </ol>
+
+            <!-- 下载按钮 -->
+            <div class="download-section">
+                <a href="resume.md" download="resume.md" class="download-link">
+                    <span class="download-icon">⬇️</span>
+                    下载 Markdown 源文件
+                </a>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>最后更新：<span class="update-time">2026年03月02日 11:10:20</span></p>
+            <p class="footer-links">
+                <a href="https://github.com/sweetwuxiaomei/resume/actions" target="_blank">构建日志</a> |
+                <a href="https://github.com/sweetwuxiaomei/resume" target="_blank">项目仓库</a>
+            </p>
+        </footer>
     </div>
-
-    <!-- 页脚信息 -->
-    <div class="last-update">
-        <p>
-            最后更新: <span id="update-time">2026年03月02日 10:35:58</span> |
-            自动生成自 <a href="resume.md">resume.md</a>
-        </p>
-        <p>
-            <a href="https://github.com/sweetwuxiaomei/resume/actions" target="_blank">查看构建日志</a> |
-            <a href="https://github.com/sweetwuxiaomei/resume" target="_blank">项目仓库</a>
-        </p>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 更新显示时间
-        const updateTime = document.getElementById('update-time');
-        if (updateTime && updateTime.textContent.includes('2026年03月02日 10:35:58')) {
-            const now = new Date();
-            const timeString = now.toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            });
-            updateTime.textContent = timeString;
-        }
-
-        // 为所有外部链接添加target="_blank"
-        document.querySelectorAll('a[href^="http"]').forEach(link => {
-            if (link.hostname !== window.location.hostname) {
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
-            }
-        });
-
-        // 平滑滚动
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId !== '#') {
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }
-            });
-        });
-    });
-</script>
 </body>
 </html>
