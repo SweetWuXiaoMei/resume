@@ -49,15 +49,24 @@ jobs:
           # 3. 替换模板中的占位符
           echo "正在处理模板占位符..."
           FINAL_HTML="$TEMPLATE_CONTENT"
-          
+
+          # 从resume.md提取信息或使用默认值
+          NAME="陈志达"
+          TITLE="Java高级开发 | 架构师 | Apache ServiceComb PMC"
+          EMAIL="chenzhida@apache.org"
+          PHONE="13257360626"
+          LOCATION="中国"
+          GITHUB="github.com/chenzhida"
+          GITHUB_USER="${{ github.repository_owner }}"
+
           # 依次替换所有占位符
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{NAME}}/陈志达/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{TITLE}}/全栈开发者 | 技术热爱者 | 问题解决者/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{EMAIL}}/sweetwuxiaomei@example.com/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{GITHUB}}/github.com\/SweetWuXiaoMei/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{GITHUB_USER}}/SweetWuXiaoMei/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{LOCATION}}/上海/g")
-          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{PHONE}}/(+86) 138-XXXX-XXXX/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{NAME}}/$NAME/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{TITLE}}/$TITLE/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{EMAIL}}/$EMAIL/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{GITHUB}}/$GITHUB/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{GITHUB_USER}}/$GITHUB_USER/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{LOCATION}}/$LOCATION/g")
+          FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{PHONE}}/$PHONE/g")
           FINAL_HTML=$(echo "$FINAL_HTML" | sed "s/{{UPDATE_TIME}}/$(date '+%Y年%m月%d日 %H:%M:%S')/g")
           
           # 4. 替换内容区域（使用更可靠的方法）
@@ -119,7 +128,7 @@ jobs:
           echo "**生成的文件**: [index.html](https://github.com/${{ github.repository }}/blob/main/chenzhida/index.html)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**查看简历**: " >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub Pages: \`https://sweetwuxiaomei.github.io/resume/chenzhida/\`" >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub 源文件: \`https://github.com/SweetWuXiaoMei/resume/blob/main/chenzhida/index.html\`" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub Pages: \`https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}/chenzhida/\`" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub 源文件: \`https://github.com/${{ github.repository }}/blob/main/chenzhida/index.html\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "下次更新只需编辑 \`resume.md\` 文件即可。" >> $GITHUB_STEP_SUMMARY
