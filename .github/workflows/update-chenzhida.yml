@@ -110,17 +110,26 @@ jobs:
               echo "⚠️  可能未正确替换占位符"
           fi
 
+      - name: Copy files to root for GitHub Pages
+        run: |
+          # 复制生成的文件到根目录，方便 GitHub Pages 访问
+          cp chenzhida/index.html index.html
+          cp chenzhida/style.css style.css
+          echo "✅ 文件已复制到根目录"
+
       - name: Commit generated HTML
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          # 添加并提交index.html
+          # 添加并提交index.html和style.css
           git add chenzhida/index.html
+          git add index.html
+          git add style.css
 
           # 检查是否有待提交的变更
           if git diff --cached --quiet; then
-              echo "⚠️ index.html 没有变化，跳过提交"
+              echo "⚠️ 没有文件变化，跳过提交"
           else
               git commit -m "自动化更新HTML简历 [$(date +'%Y-%m-%d %H:%M:%S')]"
               git push
@@ -132,10 +141,14 @@ jobs:
         run: |
           echo "## 🎉 HTML简历构建成功" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**生成的文件**: [index.html](https://github.com/${{ github.repository }}/blob/master/chenzhida/index.html)" >> $GITHUB_STEP_SUMMARY
+          echo "**生成的文件**:" >> $GITHUB_STEP_SUMMARY
+          echo "- [index.html](https://github.com/${{ github.repository }}/blob/master/index.html) (根目录)" >> $GITHUB_STEP_SUMMARY
+          echo "- [chenzhida/index.html](https://github.com/${{ github.repository }}/blob/master/chenzhida/index.html) (源目录)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**查看简历**: " >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub Pages: \`https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}/chenzhida/\`" >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub 源文件: \`https://github.com/${{ github.repository }}/blob/master/chenzhida/index.html\`" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub Pages: \`https://${{ github.repository_owner }}.github.io/${{ github.repository }}/\`" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub 在线预览: \`https://github.com/${{ github.repository }}/blob/master/index.html\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "下次更新只需编辑 \`resume.md\` 文件即可。" >> $GITHUB_STEP_SUMMARY
+          echo "**提示**: 请在仓库 Settings -> Pages 中启用 GitHub Pages，选择 'Deploy from a branch' -> 'master' -> '/' 目录。" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "下次更新只需编辑 \`chenzhida/resume.md\` 文件即可。" >> $GITHUB_STEP_SUMMARY
